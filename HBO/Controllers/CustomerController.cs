@@ -1,25 +1,29 @@
-﻿using HBO.Models;
+﻿using HBO.Data;
+using HBO.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HBO.Controllers;
 
 public class CustomerController : Controller
 {
-    List<Customer> customers = new List<Customer>() {
-                new Customer() {Id = 1, Name="Rahim"},
-                new Customer() {Id = 2, Name="Hoshang"},
-                new Customer() {Id = 3, Name="Mahsa"},
-                new Customer() {Id = 4, Name="Elham"},
-            };
+    private readonly IConfiguration _config;
+    private readonly ApplicationDbContextDP _dapper;
+    public CustomerController(IConfiguration config)
+    {
+        _config = config;
+        _dapper = new ApplicationDbContextDP(_config);
+    }
+
     public IActionResult Index()
     {
+        var customers = _dapper.LoadData<Customer>("select * from tci.customer");
 
         return View(customers);
     }
 
     public IActionResult Details(int id)
     {
-        var customer = customers[id - 1];
+        var customer = _dapper.LoadDataSingle<Customer>("select * from tci.customer where CustomerId=" + id.ToString());
         return View(customer);
     }
 }

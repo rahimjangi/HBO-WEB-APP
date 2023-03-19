@@ -1,27 +1,29 @@
-﻿using HBO.Models;
+﻿using HBO.Data;
+using HBO.Models;
 using HBO.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HBO.Controllers
-{
-    public class MovieController : Controller
-    {
-        public IActionResult Random()
-        {
-            var movie = new Movie()
-            {
-                Id = 1,
-                Name = "Shrek"
-            };
-            List<Customer> customers = new List<Customer>() {
-                new Customer() {Id = 1, Name="name 1"},
-                new Customer() {Id = 2, Name="name 2"},
-                new Customer() {Id = 3, Name="name 3"},
-                new Customer() {Id = 4, Name="name 4"},
-            };
+namespace HBO.Controllers;
 
-            var model = new RandomMovieViewModel() { Movie = movie, Customers = customers };
-            return View(model);
-        }
+public class MovieController : Controller
+{
+    private readonly IConfiguration _config;
+
+    public MovieController(IConfiguration config)
+    {
+        _config = config;
+        _dapper = new ApplicationDbContextDP(_config);
+    }
+
+    private readonly ApplicationDbContextDP _dapper;
+    public IActionResult Random()
+    {
+
+        var movie = _dapper.LoadDataSingle<Movie>("select * from tci.movie where MovieId=1");
+        List<Customer> customers = _dapper.LoadData<Customer>("select * from tci.customer").ToList();
+
+
+        var model = new RandomMovieViewModel() { Movie = movie, Customers = customers };
+        return View(model);
     }
 }
