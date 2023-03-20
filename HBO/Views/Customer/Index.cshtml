@@ -1,21 +1,48 @@
-﻿@model List<Customer>
+﻿@model List<CustomerToList>
 @{
     ViewBag.Tixtle = "Customer List";
 }
-<h1>List of customers</h1>
-<table class="table table-hover">
-    <thead class=" table-dark">
-        <tr>
-            <th>Name</th>
-        </tr>
-    </thead>
-    <tbody class="table-warning">
-        
-            @foreach (var customer in Model)
-            {
+<div class="row justify-content-around">
+    <div class="col-4">
+        <h3>List of customers</h3>
+    </div>
+
+    @*<a class=" col-6 btn btn-outline-info offset-6" asp-action="UpSert">Add New Customer</a>*@
+    <div class="col-4 ">
+        <a class="btn btn-outline-info"  asp-action="UpSert">Add New Customer</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-hover">
+            <thead class=" table-dark">
                 <tr>
-                <td><a asp-controller="Customer" asp-action="Details" asp-route-Id="@customer.CustomerId">@customer.FirstName</a> </td>
-            </tr>
-            }
-    </tbody>
-</table>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Gender</th>
+                    <th>Birth Date</th>
+                    <th>Plan</th>
+                    <th>Sign Up Fee</th>
+                    <th>Discount rate %</th>
+                </tr>
+            </thead>
+            <tbody class="table-warning">
+
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td><a asp-controller="Customer" asp-action="Details" asp-route-Id="@customer.CustomerId">@customer.FirstName</a> </td>
+                        <td>@customer.LastName</td>
+                        <td>@customer.Gender</td>
+                        <td>@customer.BirthDate.ToString("yyyy-MM-dd")</td>
+                        <td>@customer.Membership</td>
+                        <td>@customer.SignUpFee.ToString("00.0")$</td>
+                        <td>@customer.Discount.ToString("00.0") %</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
