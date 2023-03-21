@@ -2,14 +2,13 @@
 @{
     ViewBag.Tixtle = "Customer List";
 }
-<div class="row justify-content-around">
-    <div class="col-4">
+<div class="row ">
+    <div class="col-6 ">
         <h3>List of customers</h3>
     </div>
 
-    @*<a class=" col-6 btn btn-outline-info offset-6" asp-action="UpSert">Add New Customer</a>*@
-    <div class="col-4 ">
-        <a class="btn btn-outline-info"  asp-action="UpSert">Add New Customer</a>
+    <div class=" col-6 pb-2" style="display:flex; justify-content:end">
+        <a class="btn btn-outline-info"   asp-action="UpSert" >Add New Customer</a>
     </div>
 </div>
 <div class="row">
@@ -24,6 +23,7 @@
                     <th>Plan</th>
                     <th>Sign Up Fee</th>
                     <th>Discount rate %</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody class="table-warning">
@@ -38,6 +38,10 @@
                         <td>@customer.Membership</td>
                         <td>@customer.SignUpFee.ToString("00.0")$</td>
                         <td>@customer.Discount.ToString("00.0") %</td>
+                        <td>
+                            <a asp-action="upsert" asp-route-id="@customer.CustomerId" class="btn btn-outline-info">Edit</a>
+                            <a asp-action="delete" asp-route-id="@customer.CustomerId"  class="btn btn-outline-danger">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>

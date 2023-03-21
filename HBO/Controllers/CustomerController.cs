@@ -47,14 +47,9 @@ public class CustomerController : Controller
         return View(customer);
     }
 
-    public IActionResult Delete(int id)
-    {
-        return View();
-    }
 
-
-    [HttpGet]
-    public IActionResult UpSert()
+    [HttpGet("[action]")]
+    public IActionResult UpSert(int id = 0)
     {
         var customer = new CustomerUpSertViewModel();
         var genderList = _dapper.LoadData<Gender>(@"select 
@@ -68,11 +63,16 @@ public class CustomerController : Controller
                                                                         [Discount]
                                                                   from tci.MembershipType");
         customer.MembershipTypes.AddRange(membershipTypes);
+        if (id > 0)
+        {
+            string sql = @"select * from tci.customer where CustomerId= " + id.ToString();
+            customer.CustomerToAdd = _dapper.LoadDataSingle<CustomerToAdd>(sql);
+        }
 
         return View(customer);
     }
 
-    [HttpPost]
+    [HttpPost("[action]")]
     public IActionResult UpSertPost(CustomerUpSertViewModel customer)
     {
 
@@ -108,6 +108,13 @@ public class CustomerController : Controller
             string sqlUpdate = @"";
             _dapper.ExecuteSql(sqlUpdate);
         }
+        return RedirectToAction("Index");
+    }
+
+    public IActionResult Delete(int id)
+    {
+        string sql = @"delete from tci.customer where customerId=" + id.ToString();
+        _dapper.ExecuteSql(sql);
         return RedirectToAction("Index");
     }
 }
